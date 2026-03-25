@@ -33,6 +33,7 @@ class RatingsStorage @Inject constructor(
             val current = json.decodeFromString<List<RatedMovie>>(jsonString).toMutableList()
 
             current.removeAll { it.imdbId == movie.imdbId }
+            // add a rating so the new object is top of the list   current.add(0,movie)
             current.add(movie)
 
             prefs[ratingsKey] = json.encodeToString(value = current)

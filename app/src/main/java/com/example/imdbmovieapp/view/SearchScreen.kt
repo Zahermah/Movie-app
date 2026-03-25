@@ -46,6 +46,7 @@ fun SearchScreen(
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val searchState by viewModel.searchState.collectAsStateWithLifecycle()
     val ratedMovies by viewModel.ratedMovies.collectAsStateWithLifecycle()
+    val ratingsMap by viewModel.ratingsMap.collectAsStateWithLifecycle()
     val isConnected by viewModel.isConnected.collectAsStateWithLifecycle()
 
     Column(
@@ -83,7 +84,7 @@ fun SearchScreen(
             is SearchUiState.Success -> {
                 SearchResultsList(
                     movies = state.movies,
-                    ratedMovies = ratedMovies,
+                    ratingsMap = ratingsMap,
                     onMovieClick = onMovieClick
                 )
             }
@@ -176,17 +177,16 @@ private fun RatedMoviesList(
 @Composable
 private fun SearchResultsList(
     movies: List<MovieSummary>,
-    ratedMovies: List<RatedMovie>,
+    ratingsMap: Map<String, Int>,
     onMovieClick: (String) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(movies, key = { it.imdbId }) { movie ->
-            val userRating = ratedMovies.find { it.imdbId == movie.imdbId }?.userRating
             MovieCard(
                 movie = movie,
-                userRating = userRating,
+                userRating = ratingsMap[movie.imdbId],
                 onClick = { onMovieClick(movie.imdbId) }
             )
         }
